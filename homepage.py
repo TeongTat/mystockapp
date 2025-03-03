@@ -80,7 +80,7 @@ with tab2:
 
 # Add content to Tab 3
 with tab3:
-  st.subheader("Price Prediction: Select and Click "Predict"")
+  st.subheader(""Price Prediction: Select and Click "Predict"")
 
   # Load an image
   image_path_tab3 = "bull_bear_01.jpg"
