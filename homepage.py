@@ -72,10 +72,10 @@ with tab2:
       st.write(stock_data)
       
       # Display charts
-      st.subheader("S&P 500 Stock Charts for closing price:")
+      st.subheader("S&P 500 Charts for {ticker_symbol} closing price:")
       st.line_chart(stock_data['Close'], width=0, height=0)
 
-      st.subheader("S&P 500 Stock Charts for trading volume:")
+      st.subheader("S&P 500 Charts for {ticker_symbol} trading volume:")
       st.line_chart(stock_data['Volume'], width=0, height=0)
 
 # Add content to Tab 3
