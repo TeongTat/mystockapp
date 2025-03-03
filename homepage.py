@@ -15,47 +15,26 @@ st.set_page_config(layout="wide")
 #set tittle page
 st.title("Stock Predictor App")
 
-
-# Load an image
-image_path = "stock_market_banner_970x250.png"
-image = Image.open(image_path)
-
-# Display the banner
-st.image(image, use_container_width=True)
-
-# Initialize session state for tab selection
-if "selected_tab" not in st.session_state:
-    st.session_state.selected_tab = "Introduction"  # Default tab
-
-# Function to change tab when a link is clicked
-def switch_tab(tab_name):
-    st.session_state.selected_tab = tab_name
-    st.rerun()  # Refresh the app to reflect the change
-
 # Create tabs
 tab1, tab2, tab3 = st.tabs(["Introduction", "S&P 500 Stock Info", "Price Prediction"])
+
+    # Load an image
+    image_path = "stock_market_banner_970x250.png"
+    image = Image.open(image_path)
+    
+    # Display the banner
+    st.image(image, use_container_width=True)
+
 
 # Introduction Tab (Tab 1)
 with tab1:
     st.write("""
-    This is a stock price and prediction modeling app that helps investors make informed decisions on buying or selling stocks.  
-    The stocks are based on all companies listed in the **S&P 500**, with real-time price updates from **Yahoo Finance**.  
+  This is a stock price and prediction modelling app that will assist investors on buying or selling the stocks. The stocks are based on all companies listed on S&P 500 and the price are up to date linking from Yahoo Finance server.
+  The app will display the following:
+  - Historical stock price trend up to the latest - shown on S&P 500 stock info tab
+  - Showcase stock price forecast (up to 5days) - shown on Price Prediction tab
 
-    ### Features:
-    - Historical stock price trend up to the latest - **[Go to Historical Trends](#)**
-    - Stock price forecast (up to 5 days) - **[Go to Forecast](#)**
-
-    The main purpose of this application is to provide price guidance, assess market risks, and help investors make data-driven decisions.
-    """)
-
-    # Add buttons to switch tabs
-    col1, col2 = st.columns(2)
-    with col1:
-        if st.button("Go to Historical Trends"):
-            switch_tab("S&P 500 Stock Info")  # Switch to second tab
-    with col2:
-        if st.button("Go to Forecast"):
-            switch_tab("Price Prediction")  # Switch to third tab
+The main purpose of this application is providing price guidance for investors on the price risks and market risks of the S&P 500 stocks.""")
   
  
 # Add content to Tab 2
