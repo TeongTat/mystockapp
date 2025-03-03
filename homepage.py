@@ -82,6 +82,11 @@ with tab2:
 with tab3:
   st.subheader("Price Prediction:")
 
+  # Load an image
+  image_path_tab3 = "bull_bear.jpg"
+  image_tab3 = Image.open(image_path_tab3)
+  st.image(image_tab3, use_container_width=True)
+
   # Load full S&P 500 stock list
   def load_sp500_stocks():
       url = "https://en.wikipedia.org/wiki/List_of_S%26P_500_companies"
