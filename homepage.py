@@ -15,16 +15,16 @@ st.set_page_config(layout="wide")
 #set tittle page
 st.title("Stock Predictor App")
 
+# Load an image
+image_path = "stock_market_banner_970x250.png"
+image = Image.open(image_path)
+st.image(image, use_container_width=True)
+
 # Create tabs
 tab1, tab2, tab3 = st.tabs(["Introduction", "S&P 500 Stock Info", "Price Prediction"])
 
 # Add content to Tab 1
 with tab1:
-  # Load an image
-  image_path = "stock_market_banner_970x250.png"
-  image = Image.open(image_path)
-  st.image(image, use_container_width=True)
-  
   
   st.write("""
   This is a stock price and prediction modelling app that will assist investors on buying or selling the stocks. The stocks are based on all companies listed on S&P 500 and the price are up to date linking from Yahoo Finance server.
