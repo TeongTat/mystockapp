@@ -18,7 +18,7 @@ st.title("Stock Predictor App")
 # Load an image
 image_path = "stockmarket_trading.jpg"
 image = Image.open(image_path)
-st.image(image, use_container_width=True)
+st.image(image, width=600)
 
 
 st.write("""
