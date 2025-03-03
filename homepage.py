@@ -25,15 +25,41 @@ with tab1:
   image_path = "stock_market_banner_970x250.png"
   image = Image.open(image_path)
   st.image(image, use_container_width=True)
-  
+
+  # Initialize session state for tab selection
+  if "selected_tab" not in st.session_state:
+      st.session_state.selected_tab = "Overview"
+
+  # Function to change tab when a link is clicked
+  def switch_tab(tab_name):
+      st.session_state.selected_tab = tab_name
+    
   st.write("""
   This is a stock price and prediction modelling app that will assist investors on buying or selling the stocks. The stocks are based on all companies listed on S&P 500 and the price are up to date linking from Yahoo Finance server.
   The app will display the following:
-  - Historical stock price trend up to the latest - **[tab2]**
-  - Showcase stock price forecast (up to 5days) - shown on Price Prediction.
-  
-  The main purpose of this application is providing price guidance for investors on the price risks and market risks of the S&P 500 stocks.""")
+  - Historical stock price trend up to the latest - **[Go to Historical Trends](#)**
+  - Showcase stock price forecast (up to 5days) - **[Go to Historical Trends](#)**
 
+   The main purpose of this application is providing price guidance for investors on the price risks and market risks of the S&P 500 stocks.""")
+
+  # Check session state and show the correct tab
+  if st.session_state.selected_tab == "S&P 500 Stock Info":
+      with tab2:
+          st.write("This is the S&P 500 Stock Info")
+  elif st.session_state.selected_tab == "Price Prediction":
+      with tab3:
+          st.write("This is the Stock Analysis tab, showing historical trends and forecasts.")
+  
+  # Add buttons to trigger tab switch
+  col2, col3 = st.columns(3)
+  with col2:
+      if st.button("Go to Historical Trends"):
+          switch_tab("Stock Analysis")
+  with col2:
+      if st.button("Go to Forecast"):
+          switch_tab("Stock Analysis")
+  
+ 
 # Add content to Tab 2
 with tab2:
   st.subheader("S&P 500 Stock Info:")
