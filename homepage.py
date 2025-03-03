@@ -72,8 +72,10 @@ with tab2:
       st.write(stock_data)
       
       # Display charts
-      st.subheader("S&P 500 Stock Charts")
+      st.subheader("S&P 500 Stock Charts for closing price:")
       st.line_chart(stock_data['Close'], width=0, height=0)
+
+      st.subheader("S&P 500 Stock Charts for trading volume:")
       st.line_chart(stock_data['Volume'], width=0, height=0)
 
 # Add content to Tab 3
@@ -144,6 +146,7 @@ with tab3:
           st.write(forecast_df)
   
           # Plot results
+          st.subheader("Predicted Graphical:")
           fig, ax = plt.subplots(figsize=(10, 5))
           stock_prices['Close'][-50:].plot(ax=ax, label="Historical Close Prices", color="blue")
           forecast_df["Predicted Close Price"].plot(ax=ax, label="Forecast Close", linestyle="dashed", color="red")
