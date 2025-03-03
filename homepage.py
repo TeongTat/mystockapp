@@ -142,11 +142,11 @@ with tab3:
           })
           forecast_df.set_index("Date", inplace=True)
   
-          st.subheader("Predicted Prices for Next 5 Days")
+          st.subheader(f"Predicted {stock_symbol} Prices for Next 5 Days")
           st.write(forecast_df)
   
           # Plot results
-          st.subheader("Predicted Graphical:")
+          st.subheader(f"Predicted {stock_symbol} Chart:")
           fig, ax = plt.subplots(figsize=(10, 5))
           stock_prices['Close'][-50:].plot(ax=ax, label="Historical Close Prices", color="blue")
           forecast_df["Predicted Close Price"].plot(ax=ax, label="Forecast Close", linestyle="dashed", color="red")
