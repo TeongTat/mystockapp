@@ -16,7 +16,7 @@ st.set_page_config(layout="wide")
 st.title("Stock Predictor App")
 
 # Load an image
-image_path = "stock_trading_pic.jpg"
+image_path = "stockmarket_trading.jpg"
 image = Image.open(image_path)
 st.image(image, use_container_width=True)
 
