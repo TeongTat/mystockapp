@@ -35,6 +35,4 @@ with tab1:
   The main purpose of this application is providing price guidance for investors on the price risks and market risks of the S&P 500 stocks.""")
 
 # Add content to Tab 2
-with tab2:
-
-
+#with tab2:
