@@ -28,3 +28,7 @@ The app will display the following:
 - Showcase stock price forecast (up to 10days).
 
 The main purpose of this application is providing price guidance for investors on the price risks and market risks of the S&P 500 stocks.""")
+
+# Create tabs
+tab1, tab2 = st.tabs(["S&P 500 Stock Info", "Price Prediction"]
+
