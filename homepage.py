@@ -36,7 +36,7 @@ with tab1:
 
 # Add content to Tab 2
 with tab2:
-  st.title("S&P 500 Stock Information and Prediction")
+  st.subheader("S&P 500 Stock Information and Prediction")
   
   # Load S&P 500 tickers and company names
   @st.cache_data  # Cache the data to avoid reloading on every interaction
@@ -54,7 +54,7 @@ with tab2:
       return stock.history(period="1y")  # adjust the period as needed
   
   # Load tickers and company names
-  tickers_names = load_sp500_tickers_names()
+    tickers_names = load_sp500_tickers_names()
   
   # Dropdown for ticker selection with company names
   selected_ticker = st.selectbox(
