@@ -54,7 +54,7 @@ with tab2:
       return stock.history(period="1y")  # adjust the period as needed
   
   # Load tickers and company names
-    tickers_names = load_sp500_tickers_names()
+  tickers_names = load_sp500_tickers_names()
   
   # Dropdown for ticker selection with company names
   selected_ticker = st.selectbox(
