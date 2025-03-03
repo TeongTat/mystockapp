@@ -12,3 +12,4 @@ folium
 streamlit-folium
 geopandas
 yfinance
+lxml
