@@ -168,12 +168,12 @@ with tab3:
 
 # Introduction Tab 3:
 with tab3:
-     # User inputs stock symbol
+     # User input for stock symbol
      stock_symbol = st.text_input("Enter a stock symbol (e.g., AAPL, TSLA, MSFT):").upper()
      
-     # Date input for historical data range
-     start_date = st.date_input("Select start date for historical data", pd.to_datetime("2023-01-01"))
-     end_date = st.date_input("Select end date", pd.to_datetime("today"))
+     # Ensure unique keys for date input fields
+     start_date = st.date_input("Start date for historical data", pd.to_datetime("2023-01-01"), key="start_date")
+     end_date = st.date_input("End date", pd.to_datetime("today"), key="end_date")
      
      def fetch_stock_data(symbol, start, end):
          try:
@@ -183,7 +183,6 @@ with tab3:
              st.error(f"Error fetching data: {e}")
              return pd.DataFrame()
      
-     # Button to fetch and predict
      if st.button("Predict") and stock_symbol:
          st.subheader(f"Fetching Data for {stock_symbol}...")
          
