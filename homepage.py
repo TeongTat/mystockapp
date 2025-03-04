@@ -183,7 +183,8 @@ with tab3:
              st.error(f"Error fetching data: {e}")
              return pd.DataFrame()
      
-     if st.button("Predict") and stock_symbol:
+     # ✅ Assign a unique key to st.button()
+     if st.button("Predict", key="predict_button") and stock_symbol:
          st.subheader(f"Fetching Data for {stock_symbol}...")
          
          stock_data = fetch_stock_data(stock_symbol, start_date, end_date)
