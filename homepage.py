@@ -86,7 +86,7 @@ with tab2:
 # TAB 3: PREDICTION
 # -----------------------
 with tab3:
-    st.subheader("Price Prediction: ARIMA Model")
+    st.subheader("Price Prediction: ARIMA Model (Close, High, Low)")
 
     selected_name = st.selectbox("Choose stock for prediction", list(sp500_dict.keys()))
     symbol = sp500_dict[selected_name]
@@ -100,28 +100,54 @@ with tab3:
         })
         full_data = full_data.sort_index()
 
-        close_data = full_data['Close'].dropna()
+        close_series = full_data['Close'].dropna()
+        high_series = full_data['High'].dropna()
+        low_series = full_data['Low'].dropna()
 
-        st.line_chart(close_data.tail(100))
+        st.line_chart(close_series.tail(100))
 
-        st.write("Training ARIMA model...")
-        model = ARIMA(close_data, order=(5, 1, 0))
-        model_fit = model.fit()
+        # Forecasting function
+        def forecast_series(series, label):
+            st.write(f"Training ARIMA model for **{label}** price...")
+            model = ARIMA(series, order=(5, 1, 0))
+            fitted_model = model.fit()
+            return fitted_model.forecast(steps=5)
 
-        forecast = model_fit.forecast(steps=5)
-        forecast_dates = pd.date_range(start=close_data.index[-1], periods=6, freq='B')[1:]
-        forecast_df = pd.DataFrame({'Date': forecast_dates, 'Forecast': forecast})
+        # Forecast each component
+        forecast_close = forecast_series(close_series, "Close")
+        forecast_high = forecast_series(high_series, "High")
+        forecast_low = forecast_series(low_series, "Low")
+
+        # Prepare forecast DataFrame
+        forecast_dates = pd.date_range(start=close_series.index[-1], periods=6, freq='B')[1:]
+        forecast_df = pd.DataFrame({
+            'Date': forecast_dates,
+            'Forecast Close': forecast_close,
+            'Forecast High': forecast_high,
+            'Forecast Low': forecast_low
+        })
         forecast_df.set_index("Date", inplace=True)
 
-        st.subheader("Forecast for Next 5 Business Days")
+        st.subheader("5-Day Forecast (Close, High, Low)")
         st.write(forecast_df)
 
-        fig, ax = plt.subplots()
-        close_data.tail(100).plot(ax=ax, label="Historical", color='blue')
-        forecast_df['Forecast'].plot(ax=ax, label="Forecast", color='red', linestyle='--')
-        ax.set_title(f"Forecast for {symbol}")
+        # Plotting
+        fig, ax = plt.subplots(figsize=(10, 5))
+        close_series.tail(100).plot(ax=ax, label="Historical Close", color='blue')
+        forecast_df['Forecast Close'].plot(ax=ax, label="Forecast Close", linestyle='--', color='red')
+        forecast_df['Forecast High'].plot(ax=ax, label="Forecast High", linestyle='--', color='green')
+        forecast_df['Forecast Low'].plot(ax=ax, label="Forecast Low", linestyle='--', color='orange')
+        ax.set_title(f"{symbol} Price Forecast (Next 5 Days)")
+        ax.set_xlabel("Date")
+        ax.set_ylabel("Price")
         ax.legend()
         st.pyplot(fig)
 
     except Exception as e:
         st.error(f"Failed to fetch or model data: {e}")
+
+
+
+
+
+
