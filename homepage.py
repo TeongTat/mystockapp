@@ -16,8 +16,8 @@ from sklearn.model_selection import train_test_split
 # -----------------------
 st.set_page_config(layout="wide")  # MUST be the first Streamlit command
 
-API_KEY = ooJrqPJmfI69NTNN2yynIWftKousl2kZ  # Replace with your actual key
-ts = TimeSeries(key=API_KEY, output_format='pandas')
+API_KEY = "ooJrqPJmfI69NTNN2yynIWftKousl2kZ"  # Replace with your actual key
+ts = TimeSeries(key=ooJrqPJmfI69NTNN2yynIWftKousl2kZ, output_format='pandas')
 
 # -----------------------
 # PAGE TITLE
