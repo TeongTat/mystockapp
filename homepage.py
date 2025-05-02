@@ -108,7 +108,7 @@ with tab3:
 
         # Forecasting function
         def forecast_series(series, label):
-            st.write(f"Training ARIMA model for **{label}** price...")
+            #st.write(f"Training ARIMA model for **{label}** price...")
             model = ARIMA(series, order=(5, 1, 0))
             fitted_model = model.fit()
             return fitted_model.forecast(steps=5)
