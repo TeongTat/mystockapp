@@ -52,9 +52,18 @@ with tab2:
       return tickers_names
        
   # Function to get stock data
+  #def get_stock_data(ticker):
+       #stock = yf.Ticker(ticker)
+       #return stock.history(period="1y")  # adjust the period as needed
+
+
+  @st.cache_data(show_spinner=False)
   def get_stock_data(ticker):
-       stock = yf.Ticker(ticker)
-       return stock.history(period="1y")  # adjust the period as needed
+       try:
+            return yf.download(ticker, period="1y")
+       except yf.exceptions.YFRateLimitError:
+            st.error("Rate limit exceeded. Please wait before making more requests.")
+            return pd.DataFrame()
   
   # Load tickers and company names
   tickers_names = load_sp500_tickers_names()
