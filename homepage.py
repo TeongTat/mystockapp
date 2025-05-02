@@ -11,137 +11,116 @@ from statsmodels.tsa.arima.model import ARIMA
 from sklearn.ensemble import RandomForestRegressor
 from sklearn.model_selection import train_test_split
 
-st.set_page_config(layout="wide")
+# -----------------------
+# CONFIG
+# -----------------------
+st.set_page_config(layout="wide")  # MUST be the first Streamlit command
 
-#set tittle page
+API_KEY = "ooJrqPJmfI69NTNN2yynIWftKousl2kZ"  # Replace with your actual key
+ts = TimeSeries(key=API_KEY, output_format='pandas')
+
+# -----------------------
+# PAGE TITLE
+# -----------------------
 st.title("Stock Predictor App")
 
-# Create tabs
+# -----------------------
+# TAB SETUP
+# -----------------------
 tab1, tab2, tab3 = st.tabs(["Introduction", "S&P 500 Stock Info", "Price Prediction"])
 
-# Introduction Tab (Tab 1)
+# -----------------------
+# TAB 1: INTRODUCTION
+# -----------------------
 with tab1:
-
-     # Load an image
     image_path = "stock_market_banner_970x250.png"
     image = Image.open(image_path)
-    
-    # Display the banner
     st.image(image, use_container_width=True)
-    
     st.write("""
-  This is a stock price and prediction modelling app that will assist investors on buying or selling the stocks. The stocks are based on all companies listed on S&P 500 and the price are up to date linking from Yahoo Finance server.
-  The app will display the following:
-  - Historical stock price trend up to the latest - shown on S&P 500 stock info tab
-  - Showcase stock price forecast (up to 5days) - shown on Price Prediction tab
+    This is a stock price and prediction modelling app using Alpha Vantage API.
+    - View historical prices
+    - Forecast next 5 days using ARIMA model
+    """)
 
-The main purpose of this application is providing price guidance for investors on the price risks and market risks of the S&P 500 stocks.""")
-  
- 
-# Tab 2: S&P 500 Info
+# -----------------------
+# Load S&P 500 tickers
+# -----------------------
+@st.cache_data
+def load_sp500_tickers():
+    url = "https://en.wikipedia.org/wiki/List_of_S%26P_500_companies"
+    table = pd.read_html(url)[0]
+    return dict(zip(table['Security'], table['Symbol']))
+
+sp500_dict = load_sp500_tickers()
+
+# -----------------------
+# TAB 2: STOCK INFO
+# -----------------------
 with tab2:
-    st.subheader("S&P 500 Stock Info:")
+    st.subheader("S&P 500 Stock Info")
 
-    @st.cache_data
-    def load_sp500_tickers_names():
-        url = "https://en.wikipedia.org/wiki/List_of_S%26P_500_companies"
-        table = pd.read_html(url)[0]
-        tickers_names = dict(zip(table["Symbol"], table["Security"]))
-        return tickers_names
+    selected = st.selectbox("Select a stock:", [f"{k} ({v})" for k, v in sp500_dict.items()])
+    selected_name, selected_symbol = selected.rsplit("(", 1)
+    selected_symbol = selected_symbol.strip(")")
 
-    def get_stock_data(ticker):
-        ticker = ticker.replace(".", "-")
-        for _ in range(3):
-            stock = yf.Ticker(ticker)
-            hist = stock.history(period="1y")
-            if not hist.empty:
-                return hist
-        return pd.DataFrame()
+    st.write(f"Fetching data for **{selected_symbol}**...")
 
-    tickers_names = load_sp500_tickers_names()
-    selected = st.selectbox("Select a stock ticker:", [f"{t} - {n}" for t, n in tickers_names.items()])
-    ticker_symbol = selected.split(" - ")[0]
+    try:
+        data, _ = ts.get_daily(symbol=selected_symbol, outputsize='compact')
+        data = data.rename(columns={
+            '1. open': 'Open', '2. high': 'High',
+            '3. low': 'Low', '4. close': 'Close', '5. volume': 'Volume'
+        })
+        data = data.sort_index()
 
-    if ticker_symbol:
-        st.subheader(f"Stock Data for {ticker_symbol}")
-        df = get_stock_data(ticker_symbol)
-        if df.empty:
-            st.error("No data found. Please try another stock.")
-        else:
-            st.write(df)
-            st.subheader("Closing Price Chart")
-            st.line_chart(df["Close"])
-            st.subheader("Volume Chart")
-            st.line_chart(df["Volume"])
+        st.line_chart(data['Close'])
+        st.line_chart(data['Volume'])
+        st.write("Latest data:")
+        st.write(data.tail())
 
-# Tab 3: Prediction
+    except Exception as e:
+        st.error(f"Error fetching stock data: {e}")
+
+# -----------------------
+# TAB 3: PREDICTION
+# -----------------------
 with tab3:
-    st.subheader("Price Prediction: Select and Click-Predict")
-    st.image("bull_bear_01.jpg", use_container_width=True)
+    st.subheader("Price Prediction: ARIMA Model")
 
-    def load_sp500_stocks():
-        url = "https://en.wikipedia.org/wiki/List_of_S%26P_500_companies"
-        table = pd.read_html(url)[0]
-        return dict(zip(table['Security'], table['Symbol']))
+    selected_name = st.selectbox("Choose stock for prediction", list(sp500_dict.keys()))
+    symbol = sp500_dict[selected_name]
 
-    sp500_stocks = load_sp500_stocks()
-    stock_name = st.selectbox("Select a stock:", list(sp500_stocks.keys()))
-    stock_symbol = sp500_stocks[stock_name].replace(".", "-")
+    try:
+        st.write(f"Fetching full data for **{symbol}**...")
+        full_data, _ = ts.get_daily(symbol=symbol, outputsize='full')
+        full_data = full_data.rename(columns={
+            '1. open': 'Open', '2. high': 'High',
+            '3. low': 'Low', '4. close': 'Close', '5. volume': 'Volume'
+        })
+        full_data = full_data.sort_index()
 
-    start_date = st.date_input("Select start date", datetime.date(2023, 1, 1))
-    end_date = st.date_input("Select end date", datetime.date.today())
+        close_data = full_data['Close'].dropna()
 
-    @st.cache_data
-    def fetch_stock_data(symbol, start, end, retries=3):
-        for _ in range(retries):
-            data = yf.download(symbol, start=start, end=end)
-            if not data.empty:
-                return data
-        return pd.DataFrame()
+        st.line_chart(close_data.tail(100))
 
-    if st.button("Predict"):
-        st.subheader(f"Fetching Data for {stock_symbol}...")
-        data = fetch_stock_data(stock_symbol, start_date, end_date)
+        st.write("Training ARIMA model...")
+        model = ARIMA(close_data, order=(5, 1, 0))
+        model_fit = model.fit()
 
-        if data.empty:
-            st.error("No data found! Try selecting a different stock or date range.")
-        else:
-            st.write("Last 5 rows of historical data:")
-            st.write(data.tail())
+        forecast = model_fit.forecast(steps=5)
+        forecast_dates = pd.date_range(start=close_data.index[-1], periods=6, freq='B')[1:]
+        forecast_df = pd.DataFrame({'Date': forecast_dates, 'Forecast': forecast})
+        forecast_df.set_index("Date", inplace=True)
 
-            stock_prices = data[['Close', 'High', 'Low']].dropna()
+        st.subheader("Forecast for Next 5 Business Days")
+        st.write(forecast_df)
 
-            def train_arima(series):
-                model = ARIMA(series, order=(5, 1, 0))
-                return model.fit()
+        fig, ax = plt.subplots()
+        close_data.tail(100).plot(ax=ax, label="Historical", color='blue')
+        forecast_df['Forecast'].plot(ax=ax, label="Forecast", color='red', linestyle='--')
+        ax.set_title(f"Forecast for {symbol}")
+        ax.legend()
+        st.pyplot(fig)
 
-            model_close = train_arima(stock_prices['Close'])
-            model_high = train_arima(stock_prices['High'])
-            model_low = train_arima(stock_prices['Low'])
-
-            forecast_close = model_close.forecast(steps=5)
-            forecast_high = model_high.forecast(steps=5)
-            forecast_low = model_low.forecast(steps=5)
-
-            future_dates = pd.date_range(stock_prices.index[-1], periods=6)[1:]
-            forecast_df = pd.DataFrame({
-                'Date': future_dates,
-                'Predicted Close Price': forecast_close,
-                'Predicted High Price': forecast_high,
-                'Predicted Low Price': forecast_low
-            }).set_index("Date")
-
-            st.subheader("Forecast for Next 5 Days")
-            st.write(forecast_df)
-
-            st.subheader("Forecast Chart")
-            fig, ax = plt.subplots(figsize=(10, 5))
-            stock_prices['Close'][-50:].plot(ax=ax, label="Historical Close", color="blue")
-            forecast_df["Predicted Close Price"].plot(ax=ax, label="Forecast Close", color="red", linestyle="--")
-            forecast_df["Predicted High Price"].plot(ax=ax, label="Forecast High", color="green", linestyle="--")
-            forecast_df["Predicted Low Price"].plot(ax=ax, label="Forecast Low", color="orange", linestyle="--")
-            ax.set_title(f"Stock Price Prediction for {stock_symbol}")
-            ax.set_xlabel("Date")
-            ax.set_ylabel("Price")
-            ax.legend()
-            st.pyplot(fig)
+    except Exception as e:
+        st.error(f"Failed to fetch or model data: {e}")
