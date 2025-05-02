@@ -11,9 +11,10 @@ from statsmodels.tsa.arima.model import ARIMA
 from sklearn.ensemble import RandomForestRegressor
 from sklearn.model_selection import train_test_split
 
+# ✅ MUST be first Streamlit command
 st.set_page_config(layout="wide")
 
-#set tittle page
+# Now it's safe to use other Streamlit commands
 st.title("Stock Predictor App")
 
 # Create tabs
