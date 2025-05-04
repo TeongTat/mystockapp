@@ -17,7 +17,7 @@ from alpha_vantage.timeseries import TimeSeries
 # -----------------------
 st.set_page_config(layout="wide")  # MUST be the first Streamlit command
 
-API_KEY = "ooJrqPJmfI69NTNN2yynIWftKousl2kZ"  # Replace with your actual key
+API_KEY = "ad0c312fed0549689ae22f4aec9cacd5"  # Replace with your actual key
 ts = TimeSeries(key=API_KEY, output_format='pandas')
 
 # -----------------------
