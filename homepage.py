@@ -126,7 +126,7 @@ with tab3:
         st.subheader(f"5-Day Forecast for **{symbol}**")
         st.write(forecast_df)
 
-        st.subheader(f"Graph for 5-Day Forecast for **{symbol}**")
+        st.subheader(f"Graph Forecast for **{symbol}**")
         fig, ax = plt.subplots(figsize=(10, 5))
         close_series.tail(100).plot(ax=ax, label="Historical Close", color='blue')
         forecast_df['Forecast Close'].plot(ax=ax, label="Forecast Close", linestyle='--', color='red')
