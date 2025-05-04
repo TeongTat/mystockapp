@@ -82,7 +82,7 @@ with tab2:
         st.line_chart(data['close'])
         st.subheader(f"Volume for **{selected_symbol}**")
         st.line_chart(data['volume'])
-        st.write("Latest data:")
+        st.subheader(f"Latest data for **{selected_symbol}**")
         st.write(data.tail())
     except Exception as e:
         st.error(f"Error fetching stock data: {e}")
@@ -91,12 +91,12 @@ with tab2:
 # TAB 3: PREDICTION
 # -----------------------
 with tab3:
-    st.subheader("Price Prediction: ARIMA Model (Close, High, Low)")
+    st.subheader("Price Prediction: ARIMA Model")
     selected_name = st.selectbox("Choose stock for prediction", list(sp500_dict.keys()))
     symbol = sp500_dict[selected_name]
 
     try:
-        st.write(f"Fetching data for **{symbol}**...")
+        st.subheader(f"Closing Price for **{selected_symbol}**")
         data = fetch_data_twelve_data(symbol, outputsize=200)
         close_series = data['close'].dropna()
         high_series = data['high'].dropna()
@@ -123,7 +123,7 @@ with tab3:
             'Forecast Low': forecast_low
         }).set_index("Date")
 
-        st.write(f"5-Day Forecast for **{symbol}**")
+        st.subheader(f"5-Day Forecast for **{symbol}**")
         st.write(forecast_df)
 
         fig, ax = plt.subplots(figsize=(10, 5))
