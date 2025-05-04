@@ -95,7 +95,7 @@ with tab3:
     symbol = sp500_dict[selected_name]
 
     try:
-        st.write(f"Fetching full data for **{symbol}**...")
+        st.write(f"Fetching closing price data for **{symbol}**...")
         full_data, _ = ts.get_daily(symbol=symbol, outputsize='full')
         full_data = full_data.rename(columns={
             '1. open': 'Open', '2. high': 'High',
@@ -131,9 +131,10 @@ with tab3:
         })
         forecast_df.set_index("Date", inplace=True)
 
-        st.subheader("5-Day Forecast (Close, High, Low)")
+        st.subheader("5-Day Forecast for **{symbol}** (Close, High, Low)")
         st.write(forecast_df)
 
+        st.subheader("Graphical for **{symbol}**")
         # Plotting
         fig, ax = plt.subplots(figsize=(10, 5))
         close_series.tail(100).plot(ax=ax, label="Historical Close", color='blue')
