@@ -29,8 +29,13 @@ with tab1:
     image = Image.open("stock_market_banner_970x250.png")
     st.image(image, use_container_width=True)
     st.write("""
-    This app helps investors view historical S&P 500 stock trends and forecast prices using the ARIMA model.
-    Now powered by **Twelve Data API**, which provides real-time market data.
+    This is a stock price and prediction modelling app that will assist investors on buying or selling the stocks. The stocks are based on all companies listed on S&P 500 and the price are up to date.
+  The app will display the following:
+  - Historical stock price trend up to the latest - shown on S&P 500 stock info tab
+  - Forecast next 5 days using ARIMA model (up to 5days) - shown on Price Prediction tab
+
+The main purpose of this application is providing price guidance for investors on the price risks and market risks of the S&P 500 stocks.
+
     """)
 
 # -----------------------
