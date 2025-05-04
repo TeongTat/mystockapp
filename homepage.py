@@ -78,6 +78,7 @@ with tab2:
 
     try:
         data = fetch_data_twelve_data(selected_symbol)
+        st.subheader(f"CLosing Price for **{selected_symbol}**...")
         st.line_chart(data['close'])
         st.line_chart(data['volume'])
         st.write("Latest data:")
