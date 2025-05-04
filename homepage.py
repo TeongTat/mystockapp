@@ -131,10 +131,10 @@ with tab3:
         })
         forecast_df.set_index("Date", inplace=True)
 
-        st.subheader("5-Day Forecast for **{symbol}** (Close, High, Low)")
+        st.write("5-Day Forecast for **{symbol}** (Close, High, Low)")
         st.write(forecast_df)
 
-        st.subheader("Graphical for **{symbol}**")
+        st.write("Graphical for **{symbol}**")
         # Plotting
         fig, ax = plt.subplots(figsize=(10, 5))
         close_series.tail(100).plot(ax=ax, label="Historical Close", color='blue')
