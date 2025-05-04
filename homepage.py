@@ -74,12 +74,13 @@ with tab2:
     selected_name, selected_symbol = selected.rsplit("(", 1)
     selected_symbol = selected_symbol.strip(")")
 
-    st.write(f"Fetching data for **{selected_symbol}**...")
 
     try:
         data = fetch_data_twelve_data(selected_symbol)
-        st.subheader(f"CLosing Price for **{selected_symbol}**...")
+        
+        st.subheader(f"Closing Price for **{selected_symbol}**...")
         st.line_chart(data['close'])
+        st.subheader(f"Volume for **{selected_symbol}**...")
         st.line_chart(data['volume'])
         st.write("Latest data:")
         st.write(data.tail())
